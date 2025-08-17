@@ -3,10 +3,10 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger: none
+trigger: none   # Sirf manually run karne ke liye
 
 pool:
-  vmImage: love2
+  name: love2   # Self-hosted agent pool ka naam
 
 steps:
 - script: echo Hello, world!
