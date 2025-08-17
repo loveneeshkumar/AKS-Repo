@@ -6,7 +6,7 @@
 trigger: none
 
 pool:
-  vmImage: Default
+  vmImage: love2
 
 steps:
 - script: echo Hello, world!
