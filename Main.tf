@@ -3,6 +3,13 @@ resource "azurerm_resource_group" "aks_rg" {
   location = "East US"
 }
 
+resource "azurerm_resource_group" "aks_rg" {
+  name     = "Loveaks-resource-group"
+  location = "East US"
+}
+
+
+
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
   name                = "LoveneeshAKSCluster"
   location            = azurerm_resource_group.aks_rg.location
