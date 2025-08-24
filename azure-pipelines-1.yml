@@ -3,18 +3,19 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+
 trigger:
 - main
 
 pool:
-  name: :love2
+  name: love2   # fixed pool name
 
 steps:
-- task: TerraformInstaller@2
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+  displayName: Install Terraform
   inputs:
     terraformVersion: 'latest'
 
-- task: TerraformCLI@2
-  inputs:
-    command: 'validate'
-    allowTelemetryCollection: true
+
+
+
