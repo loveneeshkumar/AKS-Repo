@@ -1,20 +1,62 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
 pool:
-  name: :love2
+  name: love2   # tumhara agent pool
+
+variables:
+  TF_WORKING_DIR: '$(System.DefaultWorkingDirectory)/AKS'
 
 steps:
-- task: TerraformInstaller@2
-  inputs:
-    terraformVersion: 'latest'
+  # Install Terraform (ms-devlabs extension)
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+    displayName: "Install Terraform"
+    inputs:
+      terraformVersion: 'latest'
 
-- task: TerraformCLI@2
-  inputs:
-    command: 'validate'
-    allowTelemetryCollection: true
+  # Terraform Init
+  - task: TerraformTask@5
+    displayName: "Terraform Init"
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: $(TF_WORKING_DIR)
+
+  # Terraform fmt (format check)
+  - script: terraform fmt -check -recursive
+    displayName: "Terraform Fmt Check"
+    workingDirectory: $(TF_WORKING_DIR)
+
+  # Terraform Validate
+  - task: TerraformTask@5
+    displayName: "Terraform Validate"
+    inputs:
+      provider: 'azurerm'
+      command: 'validate'
+      workingDirectory: $(TF_WORKING_DIR)
+
+  # Terraform Plan
+  - task: TerraformTask@5
+    displayName: "Terraform Plan"
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      workingDirectory: $(TF_WORKING_DIR)
+      environmentServiceNameAzureRM: 'Loveneesh_2'
+
+  # Terraform Apply (recommend approval gate use karo)
+  - task: TerraformTask@5
+    displayName: "Terraform Apply"
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      workingDirectory: $(TF_WORKING_DIR)
+      environmentServiceNameAzureRM: 'Loveneesh_2'
+
+  # tfsec Scan (Aqua Security extension from Marketplace)
+  - task: tfsec@1
+    displayName: "Terraform Security Scan"
+    inputs:
+      path: $(TF_WORKING_DIR)
+      fullScan: true
+      softFail: false   # true karne par scan issues pipeline ko fail nahi karenge
