@@ -1,5 +1,5 @@
 trigger:
-- main
+- none
 
 pool:
   name: love2   # tumhara agent pool
