@@ -24,8 +24,13 @@ steps:
     provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
-    environmentServiceNameAzureRM: 'Loveneesh_2'
-    terraformVersion: 'C:\Love_48\_tool\terraform\1.13.0\x64\terraform.exe'
+    environmentServiceNameAzureRM: 'Loveneesh_2'  # your Azure RM service connection
+    backendServiceArm: 'Loveneesh_2'            # <-- REQUIRED for backend
+    backendAzureRmResourceGroupName: 'rg-aks'   # your RG where storage account exists
+    backendAzureRmStorageAccountName: 'love12345'
+    backendAzureRmContainerName: 'loveneesh'
+    backendAzureRmKey: 'love.tfstate'
+
 
 
 
