@@ -1,60 +1,51 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-trigger: none   # Sirf manually run karne ke liye
+trigger: none   # Manually run
 
 pool:
-  name: love2   # Self-hosted agent pool ka naam
+  name: love2   # Self-hosted agent
 
-
+variables:
+  TF_WORKING_DIR: '$(System.DefaultWorkingDirectory)/AKS'
 
 steps:
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+    displayName: 'Install Terraform'
+    inputs:
+      terraformVersion: '1.13.0'
 
-- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
-  displayName: Install Terraform
-  inputs:
-    terraformVersion: '1.7.5'   # or "latest"
+  - task: TerraformTask@5
+    displayName: 'Terraform Init'
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: '$(TF_WORKING_DIR)'
+      environmentServiceNameAzureRM: 'Loveneesh_2'
+      backendServiceArm: 'Loveneesh_2'
+      backendAzureRmResourceGroupName: 'rg-aks'
+      backendAzureRmStorageAccountName: 'love12345'
+      backendAzureRmContainerName: 'loveneesh'
+      backendAzureRmKey: 'love.tfstate'
 
+  - task: TerraformTask@5
+    displayName: 'Terraform Fmt'
+    inputs:
+      provider: 'azurerm'
+      command: 'custom'
+      workingDirectory: '$(TF_WORKING_DIR)'
+      outputTo: 'console'
+      customCommand: 'fmt'
+      environmentServiceNameAzureRM: 'Loveneesh_2'
 
-- task: TerraformTask@5
-  displayName: Terraform Init
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
-    environmentServiceNameAzureRM: 'Loveneesh_2'  # your Azure RM service connection
-    backendServiceArm: 'Loveneesh_2'            # <-- REQUIRED for backend
-    backendAzureRmResourceGroupName: 'rg-aks'   # your RG where storage account exists
-    backendAzureRmStorageAccountName: 'love12345'
-    backendAzureRmContainerName: 'loveneesh'
-    backendAzureRmKey: 'love.tfstate'
+  - task: TerraformTask@5
+    displayName: 'Terraform Validate'
+    inputs:
+      provider: 'azurerm'
+      command: 'validate'
+      workingDirectory: '$(TF_WORKING_DIR)'
 
-
-
-
-
-- task: TerraformTask@5
-  displayName: terraform fmt
-  inputs:
-    provider: 'azurerm'
-    command: 'custom'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
-    outputTo: 'console'
-    customCommand: 'fmt'
-    environmentServiceNameAzureRM: 'Loveneesh_2'
-
-- task: TerraformTask@5
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
-
-- task: TerraformTask@5
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
-    environmentServiceNameAzureRM: 'Loveneesh_2'
-
+  - task: TerraformTask@5
+    displayName: 'Terraform Plan'
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      workingDirectory: '$(TF_WORKING_DIR)'
+      environmentServiceNameAzureRM: 'Loveneesh_2'
