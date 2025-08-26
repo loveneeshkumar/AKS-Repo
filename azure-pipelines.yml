@@ -58,12 +58,3 @@ steps:
       workingDirectory: '$(TF_WORKING_DIR)'
       environmentServiceNameAzureRM: 'Loveneesh_2'
 
-  # 6️⃣ Terraform Apply
-  - task: TerraformTask@5
-    displayName: 'Terraform Apply'
-    inputs:
-      provider: 'azurerm'
-      command: 'apply'
-      workingDirectory: '$(TF_WORKING_DIR)'
-      environmentServiceNameAzureRM: 'Loveneesh_2'
-      args: '-auto-approve'
