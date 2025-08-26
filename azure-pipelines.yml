@@ -8,11 +8,48 @@ trigger: none   # Sirf manually run karne ke liye
 pool:
   name: love2   # Self-hosted agent pool ka naam
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+
+steps:
+
+- task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@1
+  displayName: Install Terraform
+  inputs:
+    terraformVersion: 'latest'
+
+- task: TerraformTask@5
+  displayName: terraform init
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+    backendServiceArm: 'Loveneesh_2'
+    backendAzureRmStorageAccountName: 'love12345'
+    backendAzureRmContainerName: 'loveneesh'
+    backendAzureRmKey: 'love.tfstate'
+
+
+
+- task: TerraformTask@5
+  displayName: terraform fmt
+  inputs:
+    provider: 'azurerm'
+    command: 'custom'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+    outputTo: 'console'
+    customCommand: 'fmt'
+    environmentServiceNameAzureRM: 'Loveneesh_2'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+    environmentServiceNameAzureRM: 'Loveneesh_2'
+
