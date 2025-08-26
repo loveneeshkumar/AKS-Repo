@@ -12,10 +12,11 @@ pool:
 
 steps:
 
-- task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@1
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
   displayName: Install Terraform
   inputs:
-    terraformVersion: 'latest'
+    terraformVersion: '1.7.5'   # or "latest"
+
 
 - task: TerraformTask@5
   displayName: terraform init
