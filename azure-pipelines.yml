@@ -1,16 +1,13 @@
-# azure-pipelines.yml
-
-trigger: none   # Manual run only
+trigger: none
 
 pool:
-  name: love2   # Your self-hosted agent pool
+  name: love2
 
 variables:
   TF_WORKING_DIR: '$(System.DefaultWorkingDirectory)/AKS'
 
 steps:
 
-  # 1️⃣ Install Terraform using ms-devlabs extension
 # 1️⃣ Install Terraform
 - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
   inputs:
@@ -48,6 +45,7 @@ steps:
     provider: 'azurerm'
     command: 'validate'
     workingDirectory: '$(TF_WORKING_DIR)'
+    environmentServiceNameAzureRM: 'Loveneesh_2'
 
 # 5️⃣ Terraform Plan
 - task: TerraformTask@5
