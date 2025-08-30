@@ -1,19 +1,14 @@
 trigger: none
 
 pool:
-  name: love2
+  name: love2   # self-hosted agent
 
 variables:
   TF_WORKING_DIR: '$(System.DefaultWorkingDirectory)/AKS'
 
 steps:
 
-# 1️⃣ Install Terraform
-- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
-  inputs:
-    terraformVersion: '1.13.0'
-
-# 2️⃣ Terraform Init
+# 1️⃣ Terraform Init
 - task: TerraformTask@5
   displayName: 'Terraform Init'
   inputs:
@@ -27,7 +22,7 @@ steps:
     backendAzureRmKey: 'love.tfstate'
     backendAzureRmUseAzureAdAuth: true
 
-# 3️⃣ Terraform Fmt
+# 2️⃣ Terraform Fmt
 - task: TerraformTask@5
   displayName: 'Terraform Fmt'
   inputs:
@@ -38,7 +33,7 @@ steps:
     customCommand: 'fmt'
     environmentServiceNameAzureRM: 'Loveneesh_2'
 
-# 4️⃣ Terraform Validate
+# 3️⃣ Terraform Validate
 - task: TerraformTask@5
   displayName: 'Terraform Validate'
   inputs:
@@ -47,7 +42,7 @@ steps:
     workingDirectory: '$(TF_WORKING_DIR)'
     environmentServiceNameAzureRM: 'Loveneesh_2'
 
-# 5️⃣ Terraform Plan
+# 4️⃣ Terraform Plan
 - task: TerraformTask@5
   displayName: 'Terraform Plan'
   inputs:
