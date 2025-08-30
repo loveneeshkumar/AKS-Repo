@@ -1,3 +1,4 @@
+
 trigger: none
 
 pool:
@@ -8,7 +9,14 @@ variables:
 
 steps:
 
-# 1️⃣ Terraform Init
+# 1️⃣ Verify Terraform installation
+- script: |
+    echo "Checking Terraform installation on agent..."
+    where terraform
+    terraform version
+  displayName: 'Verify Terraform Installation'
+
+# 2️⃣ Terraform Init
 - task: TerraformTask@5
   displayName: 'Terraform Init'
   inputs:
@@ -22,7 +30,7 @@ steps:
     backendAzureRmKey: 'love.tfstate'
     backendAzureRmUseAzureAdAuth: true
 
-# 2️⃣ Terraform Fmt
+# 3️⃣ Terraform Fmt
 - task: TerraformTask@5
   displayName: 'Terraform Fmt'
   inputs:
@@ -33,7 +41,7 @@ steps:
     customCommand: 'fmt'
     environmentServiceNameAzureRM: 'Loveneesh_2'
 
-# 3️⃣ Terraform Validate
+# 4️⃣ Terraform Validate
 - task: TerraformTask@5
   displayName: 'Terraform Validate'
   inputs:
@@ -42,7 +50,7 @@ steps:
     workingDirectory: '$(TF_WORKING_DIR)'
     environmentServiceNameAzureRM: 'Loveneesh_2'
 
-# 4️⃣ Terraform Plan
+# 5️⃣ Terraform Plan
 - task: TerraformTask@5
   displayName: 'Terraform Plan'
   inputs:
