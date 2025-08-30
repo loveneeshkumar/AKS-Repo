@@ -8,37 +8,6 @@ variables:
 
 steps:
 
-# 1️⃣ Verify Terraform installation
-- script: |
-    echo "Checking Terraform installation on agent..."
-    C:\Terraform\terraform.exe version
-  displayName: 'Verify Terraform Installation'
-
-# 2️⃣ Terraform Init
-- script: |
-    echo "Running Terraform Init..."
-    C:\Terraform\terraform.exe init -backend-config="storage_account_name=love12345" `
-                                      -backend-config="container_name=loveneesh" `
-                                      -backend-config="key=love.tfstate" `
-                                      -backend-config="resource_group_name=rg-aks" `
-                                      -backend-config="subscription_id=96a3eaff-d4cf-4222-9fe7-1622ab46f13e" `
-                                      -backend-config="use_azuread_auth=true"
-  displayName: 'Terraform Init'
-
-# 3️⃣ Terraform Fmt
-- script: |
-    echo "Running Terraform Fmt..."
-    C:\Terraform\terraform.exe fmt -recursive
-  displayName: 'Terraform Fmt'
-
-# 4️⃣ Terraform Validate
-- script: |
-    echo "Running Terraform Validate..."
-    C:\Terraform\terraform.exe validate
-  displayName: 'Terraform Validate'
-
-# 5️⃣ Terraform Plan
-- script: |
-    echo "Running Terraform Plan..."
-    C:\Terraform\terraform.exe plan
-  displayName: 'Terraform Plan'
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
