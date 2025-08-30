@@ -11,3 +11,16 @@ steps:
 - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
+  
+- task: TerraformCLI@2
+  inputs:
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+    backendType: 'azurerm'
+    allowTelemetryCollection: true
+
+- task: TerraformCLI@2
+  inputs:
+    command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+    allowTelemetryCollection: true
