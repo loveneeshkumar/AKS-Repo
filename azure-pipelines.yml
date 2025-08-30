@@ -16,6 +16,7 @@ steps:
     provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+    backendServiceArm: 'loveneesh' 
     backendAzureRmResourceGroupName: 'rg-aks'
     backendAzureRmStorageAccountName: 'love12345'
     backendAzureRmContainerName: 'loveneesh'
