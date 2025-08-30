@@ -1,26 +1,30 @@
-trigger: none
+trigger:
+  branches:
+    include:
+      - feature/*
+      - main
 
-pool:
-  name: love2   # self-hosted agent
-
-variables:
-  TF_WORKING_DIR: '$(System.DefaultWorkingDirectory)/AKS'
+pool: love2
 
 steps:
-
-- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+- task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
-  
-- task: TerraformCLI@2
+
+- task: TerraformTask@5
   inputs:
+    provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
-    backendType: 'azurerm'
-    allowTelemetryCollection: true
+    backendAzureRmResourceGroupName: 'rg-aks'
+    backendAzureRmStorageAccountName: 'love12345'
+    backendAzureRmContainerName: 'loveneesh'
+    backendAzureRmKey: 'love.tfstate'
 
-- task: TerraformCLI@2
-  inputs:
-    command: 'validate'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
-    allowTelemetryCollection: true
+
+
+
+
+
+
+
