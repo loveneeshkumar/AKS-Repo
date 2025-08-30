@@ -1,31 +1,24 @@
+
 trigger:
   branches:
     include:
       - feature/*
       - main
 
-pool: love2
+pool: love2  # self-hosted agent
+
+variables:
+  TF_EXE_PATH: 'C:\Love_48\_tool\terraform\1.13.1\x64\terraform.exe'
 
 steps:
-- task: TerraformInstaller@1
-  inputs:
-    terraformVersion: 'latest'
-
 - task: TerraformTask@5
   inputs:
+    terraformExe: '$(TF_EXE_PATH)'
     provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
-    backendServiceArm: 'loveneesh' 
+    backendServiceArm: 'loveneesh'
     backendAzureRmResourceGroupName: 'rg-aks'
     backendAzureRmStorageAccountName: 'love12345'
     backendAzureRmContainerName: 'loveneesh'
     backendAzureRmKey: 'love.tfstate'
-
-
-
-
-
-
-
-
