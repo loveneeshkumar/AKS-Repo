@@ -1,4 +1,3 @@
-
 trigger: none
 
 pool:
@@ -12,49 +11,34 @@ steps:
 # 1️⃣ Verify Terraform installation
 - script: |
     echo "Checking Terraform installation on agent..."
-    where terraform
-    terraform version
+    C:\Terraform\terraform.exe version
   displayName: 'Verify Terraform Installation'
 
 # 2️⃣ Terraform Init
-- task: TerraformTask@5
+- script: |
+    echo "Running Terraform Init..."
+    C:\Terraform\terraform.exe init -backend-config="storage_account_name=love12345" `
+                                      -backend-config="container_name=loveneesh" `
+                                      -backend-config="key=love.tfstate" `
+                                      -backend-config="resource_group_name=rg-aks" `
+                                      -backend-config="subscription_id=96a3eaff-d4cf-4222-9fe7-1622ab46f13e" `
+                                      -backend-config="use_azuread_auth=true"
   displayName: 'Terraform Init'
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: '$(TF_WORKING_DIR)'
-    backendServiceArm: 'Loveneesh_2'
-    backendAzureRmResourceGroupName: 'rg-aks'
-    backendAzureRmStorageAccountName: 'love12345'
-    backendAzureRmContainerName: 'loveneesh'
-    backendAzureRmKey: 'love.tfstate'
-    backendAzureRmUseAzureAdAuth: true
 
 # 3️⃣ Terraform Fmt
-- task: TerraformTask@5
+- script: |
+    echo "Running Terraform Fmt..."
+    C:\Terraform\terraform.exe fmt -recursive
   displayName: 'Terraform Fmt'
-  inputs:
-    provider: 'azurerm'
-    command: 'custom'
-    workingDirectory: '$(TF_WORKING_DIR)'
-    outputTo: 'console'
-    customCommand: 'fmt'
-    environmentServiceNameAzureRM: 'Loveneesh_2'
 
 # 4️⃣ Terraform Validate
-- task: TerraformTask@5
+- script: |
+    echo "Running Terraform Validate..."
+    C:\Terraform\terraform.exe validate
   displayName: 'Terraform Validate'
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-    workingDirectory: '$(TF_WORKING_DIR)'
-    environmentServiceNameAzureRM: 'Loveneesh_2'
 
 # 5️⃣ Terraform Plan
-- task: TerraformTask@5
+- script: |
+    echo "Running Terraform Plan..."
+    C:\Terraform\terraform.exe plan
   displayName: 'Terraform Plan'
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    workingDirectory: '$(TF_WORKING_DIR)'
-    environmentServiceNameAzureRM: 'Loveneesh_2'
