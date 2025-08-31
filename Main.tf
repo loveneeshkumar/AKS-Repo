@@ -3,8 +3,8 @@ resource "azurerm_resource_group" "aks_rg" {
   location = "East US"
 }
 
-resource "azurerm_resource_group" "aks_rg" {
-  name     = "Loveaks-resource-group"
+resource "azurerm_resource_group" "aks_rg2" {
+  name     = "Loveaks2-resource-group"
   location = "East US"
 }
 
