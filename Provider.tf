@@ -1,3 +1,20 @@
+terraform {
+  backend "azurerm" {
+    resource_group_name = "Loveaks-resource-group"
+    storage_account_name = "love12345"
+    container_name = "loveneesh"
+    key = "state.tf"
+    
+  }
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
+  }
+
+  required_version = ">= 1.1.0"
+}
 provider "azurerm" {
   features {}
 
