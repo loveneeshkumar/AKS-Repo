@@ -6,8 +6,6 @@ trigger:
 
 pool: love2  # self-hosted agent
 
-
-
 steps:
 - task: TerraformTask@5
   displayName: 'Terraform Init'
@@ -21,6 +19,7 @@ steps:
     backendAzureRmStorageAccountName: 'love12345'
     backendAzureRmContainerName: 'loveneesh'
     backendAzureRmKey: 'love.tfstate'
+    commandOptions: '-input=false -migrate-state'   # ✅ auto answer "yes"
 
 - task: TerraformTask@5
   displayName: 'Terraform Plan'
