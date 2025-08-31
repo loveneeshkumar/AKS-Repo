@@ -6,8 +6,7 @@ trigger:
 
 pool: love2  # self-hosted agent
 
-variables:
-  TF_EXE_PATH: 'C:\Love_48\_tool\terraform\1.13.1\x64\terraform.exe'
+
 
 steps:
 - task: TerraformTask@5
@@ -16,7 +15,7 @@ steps:
     terraformExe: '$(TF_EXE_PATH)'
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+    workingDirectory: 'C:\Love_48\2\s'
     backendServiceArm: 'loveneesh'
     backendAzureRmResourceGroupName: 'rg-aks'
     backendAzureRmStorageAccountName: 'love12345'
@@ -29,6 +28,6 @@ steps:
     terraformExe: '$(TF_EXE_PATH)'
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/AKS'
+    workingDirectory: 'C:\Love_48\2\s'
     environmentServiceNameAzureRM: 'loveneesh'
     ensureBackend: true
