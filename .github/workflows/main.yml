@@ -1,0 +1,11 @@
+name: Manual Run Test
+
+on:
+  workflow_dispatch:   # allows manual triggering
+
+jobs:
+  test-runner:
+    runs-on: self-hosted   # uses your self-hosted runner
+    steps:
+      - name: Say Hello
+        run: echo "Hello! Runner is working."
