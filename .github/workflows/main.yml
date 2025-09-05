@@ -5,7 +5,7 @@ on:
 
 jobs:
   azure-login:
-    runs-on: [self-hosted, LOVENEESH-runner]  # Run on your self-hosted runner
+    runs-on: self-hosted   # ✅ Corrected
 
     steps:
     - name: Checkout code
@@ -24,4 +24,3 @@ jobs:
 
     - name: Verify Azure CLI Login
       run: az account show
-
