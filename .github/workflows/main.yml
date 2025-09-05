@@ -1,17 +1,17 @@
-name: Azure Deployment
+name: Azure Login Test
 
 on:
   workflow_dispatch:  # Manual trigger
 
 jobs:
-  build-and-deploy:
-    runs-on: [self-hosted, LOVENEESH-runner]  # Target your runner by name
+  azure-login:
+    runs-on: [self-hosted, LOVENEESH-runner]  # Run on your self-hosted runner
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Azure Login
+    - name: Azure Login with Service Principal
       uses: azure/login@v1
       with:
         creds: |
@@ -22,9 +22,6 @@ jobs:
             "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           }
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: "<YOUR_APP_SERVICE_NAME>"
-        slot-name: "production"
-        package: .
+    - name: Verify Azure CLI Login
+      run: az account show
+
