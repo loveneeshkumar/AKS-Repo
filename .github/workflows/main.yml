@@ -1,11 +1,11 @@
 name: Azure Deployment
 
 on:
-  workflow_dispatch:   # Manual trigger
+  workflow_dispatch:  # Manual trigger
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted  # Self-hosted runner
+    runs-on: [self-hosted, LOVENEESH-runner]  # Target your runner by name
 
     steps:
     - name: Checkout code
