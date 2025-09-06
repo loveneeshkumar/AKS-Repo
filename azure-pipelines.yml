@@ -1,32 +1,20 @@
-trigger:
-  branches:
-    include:
-      - feature/*
-      - main
+trigger: none
 
-pool: love2  # self-hosted agent
+
+pool: Infra_1  # self-hosted agent
 
 steps:
-- task: TerraformTask@5
-  displayName: 'Terraform Init'
+
+- task: TerraformInstaller@1
   inputs:
-    terraformExe: '$(TF_EXE_PATH)'
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: 'C:\Love_48\2\s'
-    backendServiceArm: 'loveneesh'
-    backendAzureRmResourceGroupName: 'rg-aks'
-    backendAzureRmStorageAccountName: 'love12345'
-    backendAzureRmContainerName: 'loveneesh'
-    backendAzureRmKey: 'love.tfstate'
-    commandOptions: '-input=false -migrate-state'   # ✅ auto answer "yes"
+    terraformVersion: 'latest'
 
 - task: TerraformTask@5
-  displayName: 'Terraform Plan'
   inputs:
-    terraformExe: '$(TF_EXE_PATH)'
     provider: 'azurerm'
-    command: 'plan'
-    workingDirectory: 'C:\Love_48\2\s'
-    environmentServiceNameAzureRM: 'loveneesh'
-    ensureBackend: true
+    command: 'init'
+    backendServiceArm: 'Loveneesh_23'
+    backendAzureRmResourceGroupName: 'rk-rg'
+    backendAzureRmStorageAccountName: 'stgstate'
+    backendAzureRmContainerName: 'terraformstate'
+    backendAzureRmKey: 'state.tf'
