@@ -1,8 +1,8 @@
 terraform {
   backend "azurerm" {
     resource_group_name = "Loveaks-resource-group"
-    storage_account_name = "love12345"
-    container_name = "loveneesh"
+    storage_account_name = "stgstate"
+    container_name = "terraformstate"
     key = "state.tf"
     
   }
