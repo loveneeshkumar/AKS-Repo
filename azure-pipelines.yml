@@ -1,57 +1,49 @@
-trigger: none  # manual pipeline run
+trigger: none
 
-pool:
-  name: Infra_1  # your self-hosted agent
+pool: Infra_1
 
 variables:
-  TF_WORKING_DIR: 'E:/AKS/AKS2'  # path to your Terraform code
+  TF_WORKING_DIR: '$(System.DefaultWorkingDirectory)/AKS'
 
-stages:
-- stage: Terraform
-  jobs:
-  - job: TerraformJob
-    steps:
+steps:
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
 
-    # Step 1: Install Terraform (latest)
-    - task: TerraformInstaller@1
-      inputs:
-        terraformVersion: 'latest'
+# Step 1: Terraform Init
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(TF_WORKING_DIR)'
+    backendServiceArm: 'Loveneesh_23'
+    backendAzureRmResourceGroupName: 'rk-rg'
+    backendAzureRmStorageAccountName: 'stgstate'
+    backendAzureRmContainerName: 'terraformstate'
+    backendAzureRmKey: 'state.tf'
+    commandOptions: '-input=false'
 
-    # Step 2: Terraform Init with Azure backend (non-interactive)
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        backendType: 'azurerm'
-        ensureBackend: true
-        backendServiceArm: 'Loveneesh_23'  # your existing service connection
-        backendAzureRmResourceGroupName: 'Loveaks-resource-group'
-        backendAzureRmStorageAccountName: 'stgstate'
-        backendAzureRmContainerName: 'terraformstate'
-        backendAzureRmKey: 'state.tf'
-        commandOptions: '-input=false'
+# Step 2: Terraform Validate
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: '$(TF_WORKING_DIR)'
 
-    # Step 3: Validate Terraform configuration
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'validate'
-        workingDirectory: '$(TF_WORKING_DIR)'
+# Step 3: Terraform Plan
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(TF_WORKING_DIR)'
+    environmentServiceNameAzureRM: 'Loveneesh_23'
+    commandOptions: '-out=tfplan -input=false'
 
-    # Step 4: Terraform Plan
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'plan'
-        environmentServiceNameAzureRM: 'Loveneesh_23'
-        workingDirectory: '$(TF_WORKING_DIR)'
-        commandOptions: '-out=tfplan -input=false'
-
-    # Step 5: Terraform Apply (manual approval recommended for production)
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        environmentServiceNameAzureRM: 'Loveneesh_23'
-        workingDirectory: '$(TF_WORKING_DIR)'
-        commandOptions: 'tfplan -input=false -auto-approve'
+# Step 4: Terraform Apply
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: '$(TF_WORKING_DIR)'
+    environmentServiceNameAzureRM: 'Loveneesh_23'
+    commandOptions: 'tfplan -input=false -auto-approve'
