@@ -1,0 +1,52 @@
+
+trigger:
+ branches:
+   include:
+     - main
+     -feature/*
+
+pool: love
+
+variables:
+  filepath: $(syatem_default)/Infra
+  servive_connection:
+
+
+steps:
+  
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
+
+
+- task: TerraformTask@5
+ display_name: teraform init
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+
+ - task: TerraformTask@5
+   inputs:
+     provider: 'azurerm'
+     command: 'plan'
+
+- task: ManualValidation@1
+  inputs:
+    notifyUsers: |
+      er.loveneesh
+      love158911
+    approvers: 'love15891'
+    instructions: 'time'
+  
+#Allow only apply plan from main branch not feature
+
+- task: TerraformTask@5
+  display_name: Plan
+  condition:and(success), eq(variable)[build.sourcebranch'], refs/head/main
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    working directory:--auto_approve
+    environmentServiceNameAzureRM: 'Loveneesh_23'
+
+
